@@ -45,10 +45,17 @@ class UrlController extends Controller
         try {
             $client->get($request->original_url);
             // Ссылка корректна и доступна
+
             $shortUrl = $this->service->makeShortUrl();
+            if (Url::where('short_url', $shortUrl)->exists()) {
+                while (!Url::where('short_url', $shortUrl)->exists()) {
+                    $shortUrl = $this->service->makeShortUrl();
+                }
+            }
             return $this->service->makeOperations($request, $user_id, $shortUrl);
+
         } catch (\Exception $e) {
-            return ResponseService::sendJsonResponse(false, 200, [], [
+            return ResponseService::sendJsonResponse(false, 402, [], [
                 'message' => "Error: " . $e->getMessage(),
             ]);
         }
@@ -64,7 +71,7 @@ class UrlController extends Controller
             if ($shortUrl) {
                 return $this->service->makeOperations($request, $user_id, $shortUrl);
             } else {
-                throw new \Exception('Your custom url is invalid');
+                throw new \Exception('This short URL is already used');
             }
 
         } catch (\Exception $e) {
@@ -81,9 +88,9 @@ class UrlController extends Controller
             $url->views += 1;
             $url->save();
         }
+
         return redirect($url->original_url);
     }
-
 
 
 }

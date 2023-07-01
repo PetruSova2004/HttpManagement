@@ -81,11 +81,12 @@
                         const short_Td = document.createElement('td');
                         const short_link = document.createElement('a');
                         short_link.href = url.original_url;
-                        short_link.textContent = url.short_url;
+
+                        short_link.textContent = "{{env('APP_URL')}}" + '/api/url/' + url.short_url; // tut peredelati
 
                         short_link.addEventListener('click', function() {
                             // Выполнение API-запроса при клике на ссылку
-                            fetch(`http://127.0.0.1:8001/api/url/${encodeURIComponent(short_link.textContent)}`)
+                            fetch(short_link.textContent)
                                 .then(response => response.json())
                                 .then(data => {
                                     // Обработка данных, полученных из API

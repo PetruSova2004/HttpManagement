@@ -7,6 +7,7 @@ use App\Models\Url;
 use App\Models\User;
 use App\Services\Response\ResponseService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -20,9 +21,12 @@ class AdminController extends Controller
 
     public function getUrls()
     {
-        $urls = Url::all();
+        $data = DB::table('urls')
+            ->join('users', 'urls.user_id', '=', 'users.id')
+            ->select('urls.id', 'urls.original_url', 'urls.short_url', 'urls.views', 'users.name')
+            ->get();
         return ResponseService::sendJsonResponse(true, 200, [], [
-            'data' => $urls,
+            'data' => $data,
         ]);
     }
 }

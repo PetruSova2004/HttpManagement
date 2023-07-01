@@ -15,7 +15,7 @@ class UrlService extends Controller
     public function makeOperations(Request $request, $user_id, $shortUrl)
     {
         $apiPath = env('APP_URL') . "/api/url/";
-        $url = $this->storeUrlToDb($request, $user_id, $shortUrl);
+        $url = $this->storeUrlToDb($request, $user_id, $shortUrl); // Verify if this short url already exists
         if ($url) {
             return ResponseService::sendJsonResponse(true, 200, [], [
                 'short_url' => $apiPath . $shortUrl,
@@ -39,8 +39,7 @@ class UrlService extends Controller
     }
     public function makeShortUrl()
     {
-        $shortUrl = uniqid();
-        return $shortUrl;
+        return uniqid();
     }
 
     public function makeCustomShortUrl(Request $request)

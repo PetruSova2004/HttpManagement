@@ -35,7 +35,7 @@
                                     <th>ID</th>
                                     <th>Original_Url</th>
                                     <th>Short_Url</th>
-                                    <th>User_id</th>
+                                    <th>User_Name</th>
                                     <th>Views</th>
                                 </tr>
                                 </thead>
@@ -94,11 +94,11 @@
                             const short_Td = document.createElement('td');
                             const short_link = document.createElement('a');
                             short_link.href = url.original_url;
-                            short_link.textContent = url.short_url;
+                            short_link.textContent = "{{env('APP_URL')}}" + '/api/url/' + url.short_url;
 
                             short_link.addEventListener('click', function() {
                                 // Выполнение API-запроса при клике на ссылку
-                                fetch(`http://127.0.0.1:8001/api/url/${encodeURIComponent(short_link.textContent)}`)
+                                fetch(short_link.textContent)
                                     .then(response => response.json())
                                     .then(data => {
                                         // Обработка данных, полученных из API
@@ -113,9 +113,9 @@
                             short_Td.appendChild(short_link);
                             tr.appendChild(short_Td);
 
-                            const user_id_Td = document.createElement('td');
-                            user_id_Td.textContent = url.user_id;
-                            tr.appendChild(user_id_Td);
+                            const name_Td = document.createElement('td');
+                            name_Td.textContent = url.name;
+                            tr.appendChild(name_Td);
 
                             const views_Td = document.createElement('td');
                             views_Td.textContent = url.views;
